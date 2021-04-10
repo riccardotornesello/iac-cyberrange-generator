@@ -3,3 +3,9 @@
   azure_rm_resourcegroup:
     name: "{{azure_resourcegroup_name}}"
     location: "{{azure_resourcegroup_location}}"
+
+- name: Create virtual network
+  azure_rm_virtualnetwork:
+    resource_group: "{{azure_resourcegroup_name}}"
+    name: "{{azure_vnet_name}}"
+    address_prefixes: "{{vnet_cidr}}"

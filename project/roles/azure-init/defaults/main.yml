@@ -1,3 +1,5 @@
 ---
 azure_resourcegroup_name: "cyberrange"
 azure_resourcegroup_location: "westeurope"
+azure_vnet_name: "myVnet"
+azure_vnet_cidr: "0.0.0.0/0"

@@ -1,10 +1,4 @@
 ---
-- name: Create virtual network
-  azure_rm_virtualnetwork:
-    resource_group: "{{azure_resourcegroup_name}}"
-    name: "{{azure_vnet_name}}"
-    address_prefixes: "{{subnet_cidr}}"
-
 - name: Add subnet
   azure_rm_subnet:
     resource_group: "{{azure_resourcegroup_name}}"
