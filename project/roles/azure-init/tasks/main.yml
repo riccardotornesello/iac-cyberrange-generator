@@ -8,4 +8,4 @@
   azure_rm_virtualnetwork:
     resource_group: "{{azure_resourcegroup_name}}"
     name: "{{azure_vnet_name}}"
-    address_prefixes: "{{vnet_cidr}}"
+    address_prefixes: "{{azure_vnet_cidr}}"

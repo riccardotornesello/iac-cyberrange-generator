@@ -4,3 +4,4 @@
   roles:
     - azure-init
     - azure-network
+    - azure-vm

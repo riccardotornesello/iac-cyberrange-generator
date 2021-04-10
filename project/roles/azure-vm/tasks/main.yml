@@ -1,0 +1,56 @@
+---
+- name: Create public IP address
+  azure_rm_publicipaddress:
+    resource_group: "{{azure_resourcegroup_name}}"
+    allocation_method: Static
+    name: "{{azure_publicip_name}}"
+  register: output_ip_address
+  when: public_network
+- name: Dump public IP for VM which will be created
+  local_action: copy content={{ output_ip_address.state.ip_address }} dest=./public_ip
+  when: public_network
+
+- name: Create Network Security Group that allows SSH
+  azure_rm_securitygroup:
+    resource_group: "{{azure_resourcegroup_name}}"
+    name: "{{azure_security_group_name}}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+
+- name: Create virtual network interface card for external network
+  azure_rm_networkinterface:
+    resource_group: "{{azure_resourcegroup_name}}"
+    name: "{{azure_nic_name}}"
+    virtual_network: "{{azure_vnet_name}}"
+    subnet: "{{azure_subnet_name}}"
+    public_ip_name: "{{azure_publicip_name}}"
+    security_group: "{{azure_security_group_name}}"
+  when: public_network
+- name: Create virtual network interface card
+  azure_rm_networkinterface:
+    resource_group: "{{azure_resourcegroup_name}}"
+    name: "{{azure_nic_name}}"
+    virtual_network: "{{azure_vnet_name}}"
+    subnet: "{{azure_subnet_name}}"
+    security_group: "{{azure_security_group_name}}"
+  when: not public_network
+
+- name: Create VM
+  azure_rm_virtualmachine:
+    resource_group: "{{azure_resourcegroup_name}}"
+    name: "{{azure_vm_name}}"
+    vm_size: "{{azure_vm_size}}"
+    admin_username: "{{vm_username}}"
+    admin_password: "{{vm_password}}"
+    ssh_password_enabled: true
+    network_interfaces: "{{azure_nic_name}}"
+    image:
+      offer: UbuntuServer
+      publisher: Canonical
+      sku: "18.04-LTS"
+      version: latest

@@ -1,0 +1,14 @@
+---
+azure_resourcegroup_name: "cyberrange"
+azure_publicip_name: "myPublicIP"
+azure_security_group_name: "myNetworkSecurityGroup"
+azure_nic_name: "myNIC"
+azure_vnet_name: "myVnet"
+azure_subnet_name: "mySubnet"
+azure_vm_name: "myVM"
+azure_vm_size: "Standard_B1s"
+
+vm_username: "azureuser"
+vm_password: "testPw4321"
+
+public_network: true

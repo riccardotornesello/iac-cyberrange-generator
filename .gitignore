@@ -1,2 +1,3 @@
 artifacts/
 env/
+.public_ip
