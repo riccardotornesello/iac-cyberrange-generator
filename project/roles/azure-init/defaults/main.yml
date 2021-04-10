@@ -1,0 +1,3 @@
+---
+azure_resourcegroup_name: "cyberrange"
+azure_resourcegroup_location: "westeurope"
