@@ -1,6 +1,2 @@
-104.214.221.251
-
-[all:vars]
-ansible_connection=ssh
-ansible_user=azureuser
-ansible_ssh_pass=testPw4321
+[vpn]
+137.117.243.167  ansible_connection=ssh  ansible_user=azureuser ansible_ssh_pass=testPw4321

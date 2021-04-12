@@ -1,3 +1,5 @@
 artifacts/
 env/
+inventory/
+vpn/
 .public_ip

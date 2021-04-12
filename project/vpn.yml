@@ -1,6 +1,14 @@
 ---
 - name: Create Azure VM
-  hosts: 104.214.221.251
+  hosts: vpn
   become: yes
   roles:
-    - { role: kyl191.openvpn, clients: [client1], openvpn_port: 4300, openvpn_duplicate_cn: true }
+    - role: kyl191.openvpn
+      clients: [vpn]
+      openvpn_port: "{{openvpn_port}}"
+      openvpn_duplicate_cn: true
+      openvpn_server_network: "10.0.2.0"
+      openvpn_server_netmask: "255.255.255.0"
+      openvpn_fetch_config_dir: "../"
+      openvpn_push:
+        - "route 10.0.1.0 255.255.255.0"

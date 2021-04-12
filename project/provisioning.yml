@@ -2,6 +2,17 @@
 - name: Create Azure VM
   hosts: localhost
   roles:
-    - azure-init
-    - azure-network
-    - azure-vm
+    - role: azure-init
+    - role: azure-network
+    - role: azure-vm-main
+      vm_name: "main"
+      azure_vm_size: "Standard_B1s"
+      vm_username: "azureuser"
+      vm_password: "testPw4321"
+      vm_private_ip: "10.0.1.20"
+    - role: azure-vm
+      vm_name: "test1"
+      azure_vm_size: "Standard_B1s"
+      vm_username: "azureuser"
+      vm_password: "testPw4321"
+      vm_private_ip: "10.0.1.6"

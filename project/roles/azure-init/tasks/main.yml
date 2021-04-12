@@ -9,3 +9,21 @@
     resource_group: "{{azure_resourcegroup_name}}"
     name: "{{azure_vnet_name}}"
     address_prefixes: "{{azure_vnet_cidr}}"
+
+- name: Create Network Security Group that allows SSH and OpenVPN
+  azure_rm_securitygroup:
+    resource_group: "{{azure_resourcegroup_name}}"
+    name: "{{azure_security_group_name}}"
+    rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+      - name: OpenVPN
+        protocol: "*"
+        destination_port_range: "{{openvpn_port}}"
+        access: Allow
+        priority: 1002
+        direction: Inbound

@@ -1,0 +1,30 @@
+cloud:
+  provider: azure
+  options:
+    AZURE_CLIENT_ID: ***REMOVED***
+    AZURE_TENANT: ***REMOVED***
+    AZURE_SECRET: ***REMOVED***
+    AZURE_SUBSCRIPTION_ID: ***REMOVED***
+
+networks:
+  - name: main
+    cidr: 10.0.1.0/24
+
+vpn:
+  network: 10.0.2.0/24
+
+hosts:
+  manager:
+    hostname: main
+    username: azureuser
+    password: testPw4321
+    network: main
+    ip: 10.0.1.20
+    image: ubuntu
+  vulnboxes:
+    - hostname: test1
+      username: azureuser
+      password: testPw4321
+      network: main
+      ip: 10.0.1.6
+      image: ubuntu
