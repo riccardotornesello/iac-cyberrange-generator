@@ -1,0 +1,6 @@
+---
+- name: Create Azure VM
+  hosts: 104.214.221.251
+  become: yes
+  roles:
+    - { role: kyl191.openvpn, clients: [client1], openvpn_port: 4300, openvpn_duplicate_cn: true }

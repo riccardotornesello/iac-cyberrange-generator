@@ -7,7 +7,7 @@
   register: output_ip_address
   when: public_network
 - name: Dump public IP for VM which will be created
-  local_action: copy content={{ output_ip_address.state.ip_address }} dest=./public_ip
+  local_action: copy content={{ output_ip_address.state.ip_address }} dest=./.public_ip
   when: public_network
 
 - name: Create Network Security Group that allows SSH
