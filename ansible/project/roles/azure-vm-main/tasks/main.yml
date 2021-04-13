@@ -6,7 +6,7 @@
     name: "{{azure_publicip_name}}"
   register: output_ip_address
 - name: Dump public IP for VM which will be created
-  local_action: copy content={{ output_ip_address.state.ip_address }} dest=../.public_ip
+  local_action: copy content={{ output_ip_address.state.ip_address }} dest=../../.public_ip
 
 - name: Create virtual network interface card for external network
   azure_rm_networkinterface:

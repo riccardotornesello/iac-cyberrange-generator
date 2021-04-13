@@ -3,3 +3,5 @@ env/
 inventory/
 vpn/
 .public_ip
+.backup/
+__pycache__
