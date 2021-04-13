@@ -6,25 +6,26 @@ cloud:
     AZURE_SECRET: ***REMOVED***
     AZURE_SUBSCRIPTION_ID: ***REMOVED***
 
-networks:
+networks: # TODO: only single network
   - name: main
     cidr: 10.0.1.0/24
 
 vpn:
   network: 10.0.2.0/24
+  port: 4300
 
 hosts:
   manager:
     hostname: main
     username: azureuser
     password: testPw4321
-    network: main
+    network: main # TODO: now it is useless
     ip: 10.0.1.20
-    image: ubuntu
+    image: ubuntu # TODO: now it is useless
   vulnboxes:
     - hostname: test1
       username: azureuser
       password: testPw4321
-      network: main
+      network: main # TODO: now it is useless
       ip: 10.0.1.6
-      image: ubuntu
+      image: ubuntu # TODO: now it is useless
