@@ -1,2 +1,8 @@
 [vpn]
-137.117.243.167  ansible_connection=ssh  ansible_user=azureuser ansible_ssh_pass=testPw4321
+104.47.148.60  ansible_connection=ssh  ansible_user=azureuser
+
+[vulnbox]
+test1 ansible_host=10.0.1.6  ansible_user=azureuser ansible_ssh_pass=testPw4321
+
+[vulnbox:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -W %h:%p -i ~/.ssh/id_rsa_ansible -q azureuser@104.47.148.60"'

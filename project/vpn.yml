@@ -1,5 +1,5 @@
 ---
-- name: Create Azure VM
+- name: Install the VPN
   hosts: vpn
   become: yes
   roles:

@@ -1,0 +1,9 @@
+---
+- name: Configure the vulnboxes
+  hosts: test1
+  become: yes
+  tasks:
+  - name: Install ntpdate
+    ansible.builtin.package:
+      name: nginx
+      state: present
