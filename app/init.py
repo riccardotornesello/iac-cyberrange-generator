@@ -18,6 +18,10 @@ def move_old():
             os.makedirs(backup_folder, exist_ok=True)
             shutil.move(folder_full_path, os.path.join(backup_folder, folder))
 
+    provisioning_full_path = os.path.join(settings.PRIVATE_DATA_DIR, "project/provisioning.yml")
+    if os.path.exists(provisioning_full_path):
+        shutil.move(provisioning_full_path, os.path.join(backup_folder, "project/provisioning.yml"))
+
 
 def create_folders():
     for folder in variable_folders:
