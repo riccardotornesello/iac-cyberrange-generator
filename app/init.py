@@ -38,7 +38,7 @@ def generate_keys():
     key = RSA.generate(2048)
     with open("keys/private.key", 'wb') as content_file:
         content_file.write(key.exportKey('PEM'))
-    os.chmod("keys/private.key", 600)
+    os.chmod("keys/private.key", 0o600)
     pubkey = key.publickey()
     with open("keys/public.key", 'wb') as content_file:
         content_file.write(pubkey.exportKey('OpenSSH'))
