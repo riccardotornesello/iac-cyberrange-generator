@@ -63,7 +63,7 @@ if __name__ == "__main__":
             "openvpn_duplicate_cn": "true",
             "openvpn_server_network": config["vpn"]["network"][:-3], # TODO: get subnet from here
             "openvpn_server_netmask": "255.255.255.0",
-            "openvpn_fetch_config_dir": "../",
+            "openvpn_fetch_config_dir": "../../",
             "openvpn_push": [f"route {config['networks'][0]['cidr'][:-3]} 255.255.255.0"] # TODO: select variable subnet mask
         }]
     }]
