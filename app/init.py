@@ -50,7 +50,7 @@ def generate_hosts(manager, vulnboxes):
 
     hosts_lines = [
         "[manager]",
-        f"{manager['hostname']} ansible_host={public_ip} ansible_connection=ssh ansible_user={manager['username']} ansible_ssh_pass={manager['password']}",
+        f"{public_ip} ansible_connection=ssh ansible_user={manager['username']} ansible_ssh_pass={manager['password']}",
         "[vulnbox]"
     ]
 
