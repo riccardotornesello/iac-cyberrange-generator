@@ -29,6 +29,9 @@
     admin_username: "{{vm_username}}"
     admin_password: "{{vm_password}}"
     ssh_password_enabled: true
+    ssh_public_keys:
+      - path: "/home/{{vm_username}}/.ssh/authorized_keys"
+        key_data: "{{vm_public_key}}"
     network_interfaces: "{{vm_name}}-nic"
     image:
       offer: UbuntuServer

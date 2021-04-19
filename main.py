@@ -8,7 +8,7 @@ if __name__ == "__main__":
     """
     INITIALIZAZION
     """
-    
+
     # Open the config file
     with open("config.yml", "r") as stream:
         try:
@@ -20,6 +20,9 @@ if __name__ == "__main__":
     # Clean and create the needed directories
     init.move_old()
     init.create_folders()
+
+    # Create the rsa keys
+    init.generate_keys()
 
     """
     PROVISIONING
@@ -42,7 +45,8 @@ if __name__ == "__main__":
         playbook='provisioning.yml'
     )
     print("{}: {}".format(r.status, r.rc))
-    for each_host_event in r.events:
-        print(each_host_event['event'])
     print("Final status:")
     print(r.stats)
+
+    # Generate hosts inventory
+    init.generate_hosts(config["hosts"]["manager"], config["hosts"]["vulnboxes"])

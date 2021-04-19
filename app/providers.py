@@ -7,6 +7,9 @@ class Azure():
             environment.add_var(k, v)
 
     def provision(self, networks: list, hosts: dict):
+        with open("keys/public.key", "r") as f:
+            public_key = f.readline().strip()
+
         # TODO: make variable
         environment.add_extravar("azure_resourcegroup_name", "cyberrange")
         # TODO: make variable
@@ -37,6 +40,7 @@ class Azure():
             "vm_username": hosts["manager"]["username"],
             "vm_password": hosts["manager"]["password"],
             "vm_private_ip": hosts["manager"]["ip"],
+            "vm_public_key": public_key
         })
 
         for vulnbox in hosts["vulnboxes"]:
