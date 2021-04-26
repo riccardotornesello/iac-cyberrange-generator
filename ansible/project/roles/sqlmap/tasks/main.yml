@@ -1,0 +1,11 @@
+---
+- name: Install sqlmap
+  ansible.builtin.package:
+    name: sqlmap
+    state: present
+
+- name: Add sqlmap cron task
+  ansible.builtin.cron:
+    name: sqlmap {{sqlmap_url}}
+    hour: "/5"
+    job: "sqlmap -u {{sqlmap_url}} --answers='follow=Y' --batch -a >> /tmp/sqlmap.log"

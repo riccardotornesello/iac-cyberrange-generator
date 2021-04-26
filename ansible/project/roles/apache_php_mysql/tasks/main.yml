@@ -1,0 +1,36 @@
+---
+- name: Install apache, php and mysql
+  ansible.builtin.package:
+    name:
+      - mysql-server
+      - apache2
+      - php
+      - php-bcmath
+      - php-bz2
+      - php-intl
+      - php-gd
+      - php-mbstring
+      - php-mysql
+      - php-zip
+      - python-pymysql
+    state: present
+
+- name: Copy mysql schema
+  copy:
+    src: ../../{{schema_directory}}
+    dest: /tmp/schema.sql
+
+- name: Import database schema
+  mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: all
+    state: import
+    target: /tmp/schema.sql
+
+- name: Remove apache default site
+  command: rm -r /var/www/html
+
+- name: Copy web files
+  copy:
+    src: ../../{{web_source_directory}}/
+    dest: /var/www/html

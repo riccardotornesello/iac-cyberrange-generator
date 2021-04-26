@@ -49,7 +49,8 @@ if __name__ == "__main__":
     print(r.stats)
 
     # Generate hosts inventory
-    init.generate_hosts(config["hosts"]["manager"], config["hosts"]["vulnboxes"])
+    init.generate_hosts(config["hosts"]["manager"],
+                        config["hosts"]["vulnboxes"])
 
     # Install OpenVPN server on master
     playbook = [{
@@ -61,17 +62,18 @@ if __name__ == "__main__":
             "clients": ["vpn"],
             "openvpn_port": config["vpn"]["port"],
             "openvpn_duplicate_cn": True,
-            "openvpn_server_network": config["vpn"]["network"][:-3], # TODO: get subnet from here
+            # TODO: get subnet from here
+            "openvpn_server_network": config["vpn"]["network"][:-3],
             "openvpn_server_netmask": "255.255.255.0",
             "openvpn_fetch_config_dir": "../../",
-            "openvpn_push": [f"route {config['networks'][0]['cidr'][:-3]} 255.255.255.0"], # TODO: select variable subnet mask
+            # TODO: select variable subnet mask
+            "openvpn_push": [f"route {config['networks'][0]['cidr'][:-3]} 255.255.255.0"],
             "openvpn_client_register_dns": False
         }]
     }]
     with open("ansible/project/vpn.yml", 'w') as f:
         yaml.dump(playbook, f)
 
-    # Execute the vpn installation
     r = ansible_runner.run(
         private_data_dir=settings.PRIVATE_DATA_DIR,
         playbook='vpn.yml'
@@ -79,3 +81,33 @@ if __name__ == "__main__":
     print("{}: {}".format(r.status, r.rc))
     print("Final status:")
     print(r.stats)
+
+    # Config vulnbox services
+    for vulnbox in config["hosts"]["vulnboxes"]:
+        roles = []
+
+        for service in vulnbox["services"]:
+            roles.append({
+                "role": service["type"],
+                **service["options"]
+            })
+
+        playbook = [{
+            "name": f"Config {vulnbox['hostname']}",
+            "hosts": vulnbox['hostname'],
+            "become": "yes",
+            "roles": roles
+        }]
+
+        with open(f"ansible/project/config-{vulnbox['hostname']}.yml", 'w') as f:
+            yaml.dump(playbook, f)
+
+        r = ansible_runner.run(
+            private_data_dir=settings.PRIVATE_DATA_DIR,
+            playbook=f"config-{vulnbox['hostname']}.yml"
+        )
+        print("{}: {}".format(r.status, r.rc))
+        print("Final status:")
+        print(r.stats)
+
+    # TODO: config master services

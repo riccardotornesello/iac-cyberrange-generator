@@ -22,6 +22,10 @@ hosts:
     network: main # TODO: now it is useless
     ip: 10.0.1.20
     image: ubuntu # TODO: now it is useless
+    attacks:
+      - type: sqlmap
+        options:
+          sqlmap_url: http://10.0.1.6/?country=test
   vulnboxes:
     - hostname: test1
       username: azureuser
@@ -29,3 +33,8 @@ hosts:
       network: main # TODO: now it is useless
       ip: 10.0.1.6
       image: ubuntu # TODO: now it is useless
+      services:
+        - type: apache_php_mysql
+          options:
+            schema_directory: static/sqli/database/schema.sql
+            web_source_directory: static/sqli/web

@@ -59,7 +59,7 @@ def generate_hosts(manager, vulnboxes):
 
     hosts_lines.extend([
         "[vulnbox:vars]",
-        f"ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand=\"ssh -W %h:%p -i keys/private.key -q {manager['username']}@{public_ip}\"'"
+        f"ansible_ssh_common_args='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand=\"ssh -W %h:%p -i ../../keys/private.key -q {manager['username']}@{public_ip}\"'"
     ])
 
     with open("ansible/inventory/hosts", "w") as f:
