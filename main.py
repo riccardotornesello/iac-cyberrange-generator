@@ -68,7 +68,8 @@ if __name__ == "__main__":
             "openvpn_fetch_config_dir": "../../",
             # TODO: select variable subnet mask
             "openvpn_push": [f"route {config['networks'][0]['cidr'][:-3]} 255.255.255.0"],
-            "openvpn_client_register_dns": False
+            "openvpn_client_register_dns": False,
+            "openvpn_redirect_gateway": False
         }]
     }]
     with open("ansible/project/vpn.yml", 'w') as f:
@@ -110,4 +111,29 @@ if __name__ == "__main__":
         print("Final status:")
         print(r.stats)
 
-    # TODO: config master services
+    # Configure manager
+    manager = config["hosts"]["manager"]
+    roles = []
+    for service in manager["attacks"]:
+        roles.append({
+            "role": service["type"],
+            **service["options"]
+        })
+
+    playbook = [{
+        "name": f"Config {manager['hostname']}",
+        "hosts": "manager",
+        "become": "yes",
+        "roles": roles
+    }]
+
+    with open(f"ansible/project/config-{manager['hostname']}.yml", 'w') as f:
+        yaml.dump(playbook, f)
+
+    r = ansible_runner.run(
+        private_data_dir=settings.PRIVATE_DATA_DIR,
+        playbook=f"config-{manager['hostname']}.yml"
+    )
+    print("{}: {}".format(r.status, r.rc))
+    print("Final status:")
+    print(r.stats)

@@ -36,5 +36,5 @@ hosts:
       services:
         - type: apache_php_mysql
           options:
-            schema_directory: static/sqli/database/schema.sql
+            schema_directory: static/sqli/db/schema.sql
             web_source_directory: static/sqli/web

@@ -7,5 +7,5 @@
 - name: Add sqlmap cron task
   ansible.builtin.cron:
     name: sqlmap {{sqlmap_url}}
-    hour: "/5"
+    minute: "*/5"
     job: "sqlmap -u {{sqlmap_url}} --answers='follow=Y' --batch -a >> /tmp/sqlmap.log"
