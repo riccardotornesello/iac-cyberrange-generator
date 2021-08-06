@@ -6,7 +6,7 @@ cloud:
     AZURE_SECRET: ***REMOVED***
     AZURE_SUBSCRIPTION_ID: ***REMOVED***
 
-networks: # TODO: only single network
+networks:
   - name: main
     cidr: 10.0.1.0/24
 
@@ -19,9 +19,9 @@ hosts:
     hostname: main
     username: azureuser
     password: testPw4321
-    network: main # TODO: now it is useless
+    network: main
     ip: 10.0.1.20
-    image: ubuntu # TODO: now it is useless
+    image: ubuntu
     attacks:
       - type: sqlmap
         options:
@@ -30,9 +30,9 @@ hosts:
     - hostname: test1
       username: azureuser
       password: testPw4321
-      network: main # TODO: now it is useless
+      network: main
       ip: 10.0.1.6
-      image: ubuntu # TODO: now it is useless
+      image: ubuntu
       services:
         - type: apache_php_mysql
           options:
