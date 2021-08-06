@@ -137,3 +137,7 @@ if __name__ == "__main__":
     print("{}: {}".format(r.status, r.rc))
     print("Final status:")
     print(r.stats)
+
+    print("-" * 50)
+    print("HAVE FUN")
+    print("-" * 50)
