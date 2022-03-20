@@ -5,3 +5,4 @@ vpn/
 .public_ip
 .backup/
 __pycache__
+.venv/
