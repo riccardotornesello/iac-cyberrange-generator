@@ -45,7 +45,7 @@ def generate_keys():
 
 
 def generate_hosts(manager, vulnboxes):
-    with open(".public_ip") as f:
+    with open(".public_ip", "w+") as f:
         public_ip = f.readline().strip()
 
     hosts_lines = [
