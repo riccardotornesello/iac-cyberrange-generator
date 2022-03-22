@@ -1,23 +1,22 @@
-## envvars
+# Design and development of a tool for the implementation of cloud-based cyber ranges with open source software ​
 
-AZURE_CLIENT_ID:
-AZURE_TENANT:
-AZURE_SECRET:
-AZURE_SUBSCRIPTION_ID:
+## Description
 
-## extravars
+This project is the Proof of Concept of my Bachelor degree's thesis. It uses Ansible to generate a cyber-range using the Infrastructure as Code paradigm. It will be slowly updated to add new features, use Terraform for the provisioning stage, fix bugs and clean the code.
 
-azure_resourcegroup_name:
-azure_resourcegroup_location:
+## Directory tree
 
-azure_vnet_name:
-azure_vnet_cidr:
+```
+├── ansible
+│   ├── project: generated ansible playbooks
+│       ├── roles: required and downloaded ansible roles
+├── app: tool Python code
+├── keys: where the generated ssh keys are stored
+├── static: files required by the services to be installed in the VMs
+├── config.yml: cyber range configuration file
+└── main.py: tool entrypoint
+```
 
-azure_security_group_name:
+## How to run
 
-openvpn_port:
-
-subnet_name:
-subnet_cidr:
-
-azure_publicip_name:
+`python3 -m main`
