@@ -2,8 +2,8 @@ import subprocess
 import sys
 import os
 
-from .classes import Config
-from .terraform.providers import TerraformAzure
+from app.classes import Config
+from app.terraform.providers import TerraformAzure
 
 
 PATH = ".generated/terraform"
@@ -47,7 +47,7 @@ def apply_terraform_file():
         sys.exit(1)
 
 
-def get_terraform_output(var):
+def get_terraform_output_var(var):
     try:
         output = subprocess.run(
             ["terraform", f"-chdir={PATH}", "output", var],
@@ -55,6 +55,33 @@ def get_terraform_output(var):
             text=True,
         )
         return output.stdout.strip().replace('"', "")
+    except subprocess.CalledProcessError as e:
+        print(e)
+        sys.exit(1)
+
+
+def get_terraform_output():
+    try:
+        output = subprocess.run(
+            ["terraform", f"-chdir={PATH}", "output"],
+            capture_output=True,
+            text=True,
+        )
+        return {
+            line.split(" = ")[0]: line.split(" = ")[1].strip().replace('"', "")
+            for line in output.stdout.split("\n")
+            if line
+        }
+    except subprocess.CalledProcessError as e:
+        print(e)
+        sys.exit(1)
+
+
+def destroy_terraform_file():
+    try:
+        subprocess.run(
+            ["terraform", f"-chdir={PATH}", "destroy", "-auto-approve"], check=True
+        )
     except subprocess.CalledProcessError as e:
         print(e)
         sys.exit(1)

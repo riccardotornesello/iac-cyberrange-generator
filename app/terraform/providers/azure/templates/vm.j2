@@ -72,3 +72,7 @@ output "{{ vm_id }}-public-ip" {
   value = azurerm_public_ip.{{ vm_id }}-pub-ip.ip_address
 }
 {% endif %}
+
+output "{{ vm_id }}-private-ip" {
+  value = azurerm_network_interface.{{ vm_id }}.private_ip_address
+}
