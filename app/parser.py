@@ -41,7 +41,7 @@ def parse_config(config_file):
     vpn = Vpn(
         subnet=yaml_config["vpn"]["subnet"],
         lan_ip=yaml_config["vpn"]["lan_ip"],
-        vpn_ip=yaml_config["vpn"]["vpn_ip"],
+        vpn_subnet=yaml_config["vpn"]["vpn_subnet"],
     )
 
     return Config(

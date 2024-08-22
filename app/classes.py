@@ -31,7 +31,7 @@ class Host:
 class Vpn:
     subnet: str
     lan_ip: str
-    vpn_ip: str
+    vpn_subnet: str
 
 
 @dataclass

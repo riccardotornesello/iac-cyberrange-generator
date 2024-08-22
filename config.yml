@@ -13,7 +13,7 @@ network:
 vpn:
   subnet: main
   lan_ip: 10.0.1.200
-  vpn_ip: 10.0.100.1/24
+  vpn_subnet: 10.0.100.1/24
 
 hosts:
   - name: host1
