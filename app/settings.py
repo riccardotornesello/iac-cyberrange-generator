@@ -1,1 +1,0 @@
-PRIVATE_DATA_DIR = "ansible"

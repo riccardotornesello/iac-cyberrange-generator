@@ -1,9 +1,8 @@
 import os
-from typing import List
 
 from jinja2 import Environment, FileSystemLoader
 
-from app.classes import Network, Subnet, Host
+from app.classes import Network, Subnet, Host, Config
 
 
 class TerraformAzure:
@@ -49,7 +48,7 @@ class TerraformAzure:
         )
         return content
 
-    def _provision_vm(self, host: Host, project_name: str):
+    def _provision_vm(self, host: Host, project_name: str, public: bool = False):
         # TODO: variable os, size and disk
         template = self.environment.get_template("vm.j2")
         content = template.render(
@@ -66,23 +65,44 @@ class TerraformAzure:
             vm_disk_type="Standard_LRS",
             resource_group_id=project_name,
             subnet_id=host.subnet,
+            public_ip=public,
         )
         return content
 
     def provision(
         self,
-        project_name: str,
-        location: str,
-        network: Network,
-        subnets: List[Subnet],
-        hosts: List[Host],
+        config: Config,
     ):
-        content = [self._provision_config()]
-        content.append(self._provision_project(project_name, location))
-        content.append(self._provision_network(network, project_name))
-        for subnet in subnets:
-            content.append(self._provision_subnet(subnet, project_name))
-        for host in hosts:
-            content.append(self._provision_vm(host, project_name))
+        content = []
+
+        content.append(self._provision_config())
+
+        content.append(
+            self._provision_project(config.project.name, config.project.location)
+        )
+
+        content.append(self._provision_network(config.network, config.project.name))
+
+        for subnet in config.subnets:
+            content.append(self._provision_subnet(subnet, config.project.name))
+
+        for host in config.hosts:
+            content.append(self._provision_vm(host, config.project.name))
+
+        # TODO: VPN VM parameters
+        # TODO: public ip
+        content.append(
+            self._provision_vm(
+                Host(
+                    name="vpn",
+                    username="vpn",
+                    password="soj893f4hIYa!",
+                    ip=config.vpn.lan_ip,
+                    subnet=config.vpn.subnet,
+                ),
+                config.project.name,
+                public=True,
+            )
+        )
 
         return "\n\n".join(content)

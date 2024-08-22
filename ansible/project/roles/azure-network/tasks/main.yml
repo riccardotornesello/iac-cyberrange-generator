@@ -1,8 +1,0 @@
----
-- name: Add subnet
-  azure_rm_subnet:
-    resource_group: "{{azure_resourcegroup_name}}"
-    virtual_network: "{{azure_vnet_name}}"
-
-    name: "{{subnet_name}}"
-    address_prefix: "{{subnet_cidr}}"

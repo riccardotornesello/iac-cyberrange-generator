@@ -2,6 +2,12 @@ from dataclasses import dataclass
 
 
 @dataclass
+class Project:
+    name: str
+    location: str
+
+
+@dataclass
 class Network:
     cidr: str
 
@@ -19,3 +25,19 @@ class Host:
     password: str
     ip: str
     subnet: str
+
+
+@dataclass
+class Vpn:
+    subnet: str
+    lan_ip: str
+    vpn_ip: str
+
+
+@dataclass
+class Config:
+    project: Project
+    network: Network
+    subnets: list[Subnet]
+    hosts: list[Host]
+    vpn: Vpn

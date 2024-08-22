@@ -1,3 +1,26 @@
+
+
+{% if public_ip %}
+resource "azurerm_public_ip" "{{ vm_id }}-pub-ip" {
+  name                = "{{ vm_id }}-pub-ip"
+  resource_group_name = azurerm_resource_group.{{ resource_group_id }}.name
+  location            = azurerm_resource_group.{{ resource_group_id }}.location
+  allocation_method   = "Dynamic"
+}
+
+resource "azurerm_network_interface" "{{ vm_id }}" {
+  name                = "{{ vm_name }}-nic"
+  location            = azurerm_resource_group.{{ resource_group_id }}.location
+  resource_group_name = azurerm_resource_group.{{ resource_group_id }}.name
+
+  ip_configuration {
+    name                          = "public"
+    subnet_id                     = azurerm_subnet.{{ subnet_id }}.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.{{ vm_id }}-pub-ip.id
+  }
+}
+{% else %}
 resource "azurerm_network_interface" "{{ vm_id }}" {
   name                = "{{ vm_name }}-nic"
   location            = azurerm_resource_group.{{ resource_group_id }}.location
@@ -10,6 +33,7 @@ resource "azurerm_network_interface" "{{ vm_id }}" {
     private_ip_address            = "{{ vm_ip }}"
   }
 }
+{% endif %}
 
 resource "azurerm_virtual_machine" "{{ vm_id }}" {
   name                  = "{{ vm_name }}-vm"
@@ -42,3 +66,9 @@ resource "azurerm_virtual_machine" "{{ vm_id }}" {
     disable_password_authentication = false
   }
 }
+
+{% if public_ip %}
+output "{{ vm_id }}-public-ip" {
+  value = azurerm_public_ip.{{ vm_id }}-pub-ip.ip_address
+}
+{% endif %}

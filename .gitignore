@@ -5,6 +5,8 @@ vpn/
 .public_ip
 .backup/
 
+/.generated/
+
 # Created by https://www.toptal.com/developers/gitignore/api/terraform,python,ansible
 # Edit at https://www.toptal.com/developers/gitignore?templates=terraform,python,ansible
 

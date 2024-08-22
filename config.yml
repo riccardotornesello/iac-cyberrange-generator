@@ -1,40 +1,33 @@
-cloud:
-  provider: azure
-  options:
-    AZURE_CLIENT_ID: ***REMOVED***
-    AZURE_TENANT: ***REMOVED***
-    AZURE_SECRET: ***REMOVED***
-    AZURE_SUBSCRIPTION_ID: ***REMOVED***
+project:
+  name: cyberrange
+  location: "West Europe"
 
-networks:
-  - name: main
-    cidr: 10.0.1.0/24
+network:
+  cidr: 10.0.0.0/16
+  subnets:
+    - name: main
+      cidr: 10.0.1.0/24
+    - name: secondary
+      cidr: 10.0.2.0/24
 
 vpn:
-  network: 10.0.2.0/24
-  port: 4300
+  subnet: main
+  lan_ip: 10.0.1.200
+  vpn_ip: 10.0.100.1/24
 
 hosts:
-  manager:
-    hostname: main
-    username: azureuser
-    password: testPw4321
-    network: main
-    ip: 10.0.1.20
-    image: ubuntu
-    attacks:
-      - type: sqlmap
-        options:
-          sqlmap_url: http://10.0.1.6/?country=test
-  vulnboxes:
-    - hostname: test1
-      username: azureuser
-      password: testPw4321
-      network: main
-      ip: 10.0.1.6
-      image: ubuntu
-      services:
-        - type: apache_php_mysql
-          options:
-            schema_directory: static/sqli/db/schema.sql
-            web_source_directory: static/sqli/web
+  - name: host1
+    username: testuser1
+    password: "1bH.NP53B&IP"
+    ip: 10.0.1.5
+    subnet: main
+  - name: host2
+    username: testuser2
+    password: "1bH.NP53B&IP"
+    ip: 10.0.1.6
+    subnet: main
+  - name: host3
+    username: testuser3
+    password: "1bH.NP53B&IP"
+    ip: 10.0.2.5
+    subnet: secondary
