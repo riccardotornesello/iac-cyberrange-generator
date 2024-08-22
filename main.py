@@ -36,6 +36,8 @@ if __name__ == "__main__":
         print(e)
         sys.exit(1)
 
+    create_ssh_key_pair()
+
     """
     PROVISIONING
     """
@@ -67,7 +69,6 @@ if __name__ == "__main__":
         for host in config.hosts
     ]
 
-    create_ssh_key_pair()
     generate_hosts_file(vpn_credentials, hosts_credentials)
 
     generate_vpn_playbook(config.vpn.vpn_subnet)

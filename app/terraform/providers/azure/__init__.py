@@ -48,7 +48,13 @@ class TerraformAzure:
         )
         return content
 
-    def _provision_vm(self, host: Host, project_name: str, public: bool = False):
+    def _provision_vm(
+        self,
+        host: Host,
+        project_name: str,
+        public: bool = False,
+        ssh_key: str = None,
+    ):
         # TODO: variable os, size and disk
         template = self.environment.get_template("vm.j2")
         content = template.render(
@@ -66,6 +72,7 @@ class TerraformAzure:
             resource_group_id=project_name,
             subnet_id=host.subnet,
             public_ip=public,
+            ssh_key=ssh_key,
         )
         return content
 
@@ -102,6 +109,7 @@ class TerraformAzure:
                 ),
                 config.project.name,
                 public=True,
+                ssh_key=f"{os.getcwd()}/.generated/keys/id_rsa.pub",
             )
         )
 
