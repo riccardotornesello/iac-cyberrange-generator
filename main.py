@@ -8,7 +8,12 @@ from app.terraform import (
     get_terraform_output,
     destroy_terraform_file,
 )
-from app.ansible import generate_hosts_file, generate_vpn_playbook, run_playbook
+from app.ansible import (
+    generate_ansible_inventory,
+    generate_vpn_playbook,
+    run_playbook,
+    clean_ansible_playbooks,
+)
 from app.keys import create_ssh_key_pair
 
 if __name__ == "__main__":
@@ -69,7 +74,8 @@ if __name__ == "__main__":
         for host in config.hosts
     ]
 
-    generate_hosts_file(vpn_credentials, hosts_credentials)
+    generate_ansible_inventory(vpn_credentials, hosts_credentials)
 
+    clean_ansible_playbooks()
     generate_vpn_playbook(config.vpn.vpn_subnet)
     run_playbook("vpn")

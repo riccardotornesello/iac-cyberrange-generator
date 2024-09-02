@@ -2,16 +2,19 @@ import yaml
 import os
 import socket
 import struct
+import shutil
 
 import ansible_runner
 
 
 PATH = ".generated/ansible"
 
+current_path = os.getcwd()
 
-def generate_hosts_file(vpn_credentials, hosts_credentials):
+
+def generate_ansible_inventory(vpn_credentials, hosts_credentials):
     data = {
-        "vpn-group": {
+        "vpn_group": {
             "hosts": {
                 vpn_credentials["name"]: {
                     "ansible_host": vpn_credentials["ip"],
@@ -20,7 +23,7 @@ def generate_hosts_file(vpn_credentials, hosts_credentials):
                 }
             }
         },
-        "hosts-group": {
+        "hosts_group": {
             "hosts": {
                 host["name"]: {
                     "ansible_host": host["ip"],
@@ -35,10 +38,14 @@ def generate_hosts_file(vpn_credentials, hosts_credentials):
         },
     }
 
-    os.makedirs(PATH, exist_ok=True)
+    os.makedirs(f"{PATH}/inventory", exist_ok=True)
 
-    with open(f"{PATH}/hosts.yml", "w") as f:
+    with open(f"{PATH}/inventory/hosts.yml", "w") as f:
         yaml.dump(data, f)
+
+
+def clean_ansible_playbooks():
+    shutil.rmtree(f"{PATH}/project", ignore_errors=True)
 
 
 def generate_vpn_playbook(vpn_subnet):
@@ -49,23 +56,22 @@ def generate_vpn_playbook(vpn_subnet):
     data = [
         {
             "name": "VPN host configuration",
-            "hosts": "vpn-group",
+            "hosts": "vpn_group",
             "become": "yes",
             "roles": [{"role": "openvpn-server"}],
             "vars": {"vpn_subnet_ip": network, "vpn_subnet_mask": netmask},
         }
     ]
 
-    os.makedirs(f"{PATH}/playbooks", exist_ok=True)
+    os.makedirs(f"{PATH}/project", exist_ok=True)
 
-    with open(f"{PATH}/playbooks/vpn.yml", "w") as f:
+    with open(f"{PATH}/project/vpn.yml", "w") as f:
         yaml.dump(data, f)
 
 
 def run_playbook(playbook):
     ansible_runner.run(
-        private_data_dir=".",
-        playbook=f"{PATH}/playbooks/{playbook}.yml",
-        inventory=f"{PATH}/hosts.yml",
-        roles_path="ansible/roles",
+        private_data_dir=PATH,
+        playbook=f"{playbook}.yml",
+        roles_path=f"{current_path}/ansible/roles",
     )
