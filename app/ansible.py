@@ -58,7 +58,7 @@ def generate_vpn_playbook(vpn_subnet):
             "name": "VPN host configuration",
             "hosts": "vpn_group",
             "become": "yes",
-            "roles": [{"role": "openvpn-server"}],
+            "roles": [{"role": "openvpn_server"}],
             "vars": {"vpn_subnet_ip": network, "vpn_subnet_mask": netmask},
         }
     ]
