@@ -8,16 +8,32 @@
     state: present
   with_items:
     - openvpn
-    - easy-rsa
+    - openssl
 
 - name: Check if CA dir exists
   stat:
     path: "{{ ansible_env.HOME }}/openvpn-ca"
   register: openvpn_ca_dir
 
-- name: "Create CA dir if not exists"
-  command: make-cadir {{ ansible_env.HOME }}/openvpn-ca
+- name: Download easy-rsa 3.1.7
+  get_url:
+    url: "https://github.com/OpenVPN/easy-rsa/releases/download/v3.1.7/EasyRSA-3.1.7.tgz"
+    dest: "{{ ansible_env.HOME }}/EasyRSA-3.1.7.tgz"
   when: not openvpn_ca_dir.stat.exists
+
+- name: Extract easy-rsa
+  unarchive:
+    src: "{{ ansible_env.HOME }}/EasyRSA-3.1.7.tgz"
+    dest: "{{ ansible_env.HOME }}"
+    remote_src: yes
+  when: not openvpn_ca_dir.stat.exists
+
+- name: Move easy-rsa to openvpn-ca
+  command: mv "{{ ansible_env.HOME }}/EasyRSA-3.1.7" "{{ ansible_env.HOME }}/openvpn-ca"
+  when: not openvpn_ca_dir.stat.exists
+
+- name: Copy vars.example to vars
+  command: cp "{{ ansible_env.HOME }}/openvpn-ca/vars.example" "{{ ansible_env.HOME }}/openvpn-ca/vars"
 
 - name: Customize CA variable configuration
   lineinfile:
@@ -41,48 +57,69 @@
         value: "{{ ansible_env.HOME }}/openvpn-ca/keys",
       }
 
-- name: "Build the certificate authority"
+- name: "EasyRSA init-pki"
   shell: >
-    source vars;
-    ./clean-all;
-    yes "" | ./build-ca;
+    yes "yes" | ./easyrsa init-pki;
   args:
     chdir: "{{ ansible_env.HOME }}/openvpn-ca/"
     executable: /bin/bash
 
-- name: "Build server certificate"
+- name: "EasyRSA build-ca"
   shell: >
-    source vars;
-    ./build-key-server --batch server;
+    yes "" | ./easyrsa build-ca nopass;
   args:
     chdir: "{{ ansible_env.HOME }}/openvpn-ca/"
     executable: /bin/bash
 
-- name: "Build Diffie-Hellman parameters and key generation"
+- name: "EasyRSA gen-dh"
   shell: >
-    source vars;
-    yes "" | ./build-dh;
-    openvpn --genkey --secret keys/ta.key;
+    yes "yes" | ./easyrsa gen-dh;
   args:
     chdir: "{{ ansible_env.HOME }}/openvpn-ca/"
     executable: /bin/bash
+
+- name: "EasyRSA build-server-full"
+  shell: >
+    yes "yes" | ./easyrsa build-server-full server nopass;
+  args:
+    chdir: "{{ ansible_env.HOME }}/openvpn-ca/"
+    executable: /bin/bash
+
+- name: "EasyRSA build-client-full"
+  shell: >
+    yes "yes" | ./easyrsa build-client-full client nopass;
+  args:
+    chdir: "{{ ansible_env.HOME }}/openvpn-ca/"
+    executable: /bin/bash
+
+- name: "EasyRSA gen-crl"
+  shell: >
+    yes "yes" | ./easyrsa gen-crl;
+  args:
+    chdir: "{{ ansible_env.HOME }}/openvpn-ca/"
+    executable: /bin/bash
+
+- name: Openvpn --genkey --secret
+  ansible.builtin.command:
+    cmd: openvpn --genkey --secret {{ ansible_env.HOME }}/openvpn-ca/pki/ta.key
 
 - name: "Copy key and certificates to /etc/openvpn"
-  copy:
+  ansible.builtin.copy:
     remote_src: yes
-    src: "{{ ansible_env.HOME }}/openvpn-ca/keys/{{ item }}"
-    dest: "/etc/openvpn/"
-  with_items:
+    src: "{{ ansible_env.HOME }}/openvpn-ca/pki/{{ item }}"
+    dest: /etc/openvpn/server/{{ item | basename }}
+    mode: "0640"
+  loop:
     - "ca.crt"
-    - "server.crt"
-    - "server.key"
+    - "dh.pem"
     - "ta.key"
-    - "dh2048.pem"
+    - "issued/server.crt"
+    - "private/server.key"
 
 - name: "Generate server.conf from template"
   template:
     src: assets/server.conf.j2
-    dest: /etc/openvpn/server.conf
+    dest: /etc/openvpn/server/server.conf
 
 - name: Configuration IP forwarding
   become: true
@@ -121,7 +158,6 @@
 - name: Start openvpn systemd service
   become: true
   systemd:
-    name: openvpn@server
+    name: openvpn-server@server
     state: started
-    daemon_reload: yes
     enabled: yes

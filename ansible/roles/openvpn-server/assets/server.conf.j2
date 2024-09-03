@@ -22,10 +22,9 @@ tls-server
 tls-version-min 1.2
 tls-cipher TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256
 
-client-config-dir /etc/openvpn/ccd
 status /var/log/openvpn/status.log
 
-dh dh2048.pem
+dh dh.pem
 ca ca.crt
 cert server.crt
 key server.key
