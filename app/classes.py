@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 
 @dataclass
@@ -19,12 +20,18 @@ class Subnet:
 
 
 @dataclass
+class Service:
+    name: str
+
+
+@dataclass
 class Host:
     name: str
     username: str
     password: str
     ip: str
     subnet: str
+    services: List[Service]
 
 
 @dataclass

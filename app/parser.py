@@ -5,7 +5,7 @@ Reads and checks the configuration file, then returns the configuration in stand
 
 import yaml
 
-from .classes import Project, Network, Host, Subnet, Config, Vpn
+from .classes import Project, Network, Host, Subnet, Config, Vpn, Service
 
 
 def parse_config(config_file):
@@ -35,6 +35,9 @@ def parse_config(config_file):
             password=host["password"],
             ip=host["ip"],
             subnet=host["subnet"],
+            services=[
+                Service(name=service["name"]) for service in host.get("services", [])
+            ],
         )
         for host in yaml_config["hosts"]
     ]

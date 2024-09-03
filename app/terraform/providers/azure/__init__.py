@@ -80,24 +80,27 @@ class TerraformAzure:
         self,
         config: Config,
     ):
-        content = []
+        content = [] # The content of the terraform file, stored as a list of strings
 
+        # Provision the basic configuration
         content.append(self._provision_config())
 
+        # Provision the project on Azure
         content.append(
             self._provision_project(config.project.name, config.project.location)
         )
 
+        # Provision the network and subnets
         content.append(self._provision_network(config.network, config.project.name))
 
         for subnet in config.subnets:
             content.append(self._provision_subnet(subnet, config.project.name))
 
+        # Provision the hosts
         for host in config.hosts:
             content.append(self._provision_vm(host, config.project.name))
 
-        # TODO: VPN VM parameters
-        # TODO: public ip
+        # Provision the VPN host
         content.append(
             self._provision_vm(
                 Host(
@@ -106,6 +109,7 @@ class TerraformAzure:
                     password="soj893f4hIYa!",
                     ip=config.vpn.lan_ip,
                     subnet=config.vpn.subnet,
+                    services=[],
                 ),
                 config.project.name,
                 public=True,

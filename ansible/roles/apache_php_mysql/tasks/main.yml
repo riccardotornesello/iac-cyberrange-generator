@@ -12,25 +12,25 @@
       - php-mbstring
       - php-mysql
       - php-zip
-      - python-pymysql
+      - python3-pymysql
     state: present
 
 - name: Copy mysql schema
-  copy:
-    src: ../../{{schema_directory}}
+  ansible.builtin.copy:
+    src: assets/db/schema.sql
     dest: /tmp/schema.sql
 
 - name: Import database schema
-  mysql_db:
+  community.mysql.mysql_db:
     login_unix_socket: /var/run/mysqld/mysqld.sock
     name: all
     state: import
     target: /tmp/schema.sql
 
 - name: Remove apache default site
-  command: rm -r /var/www/html
+  ansible.builtin.command: rm -r /var/www/html
 
 - name: Copy web files
-  copy:
-    src: ../../{{web_source_directory}}/
+  ansible.builtin.copy:
+    src: assets/web/
     dest: /var/www/html

@@ -13,6 +13,7 @@ from app.ansible import (
     generate_vpn_playbook,
     run_playbook,
     clean_ansible_playbooks,
+    generate_host_playbooks,
 )
 from app.keys import create_ssh_key_pair
 
@@ -78,4 +79,12 @@ if __name__ == "__main__":
 
     clean_ansible_playbooks()
     generate_vpn_playbook(config.vpn.vpn_subnet)
+    host_playbook_names = generate_host_playbooks(config.hosts)
+
     run_playbook("vpn")
+
+    # TODO: run playbooks in parallel
+    for playbook_name in host_playbook_names:
+        run_playbook(playbook_name)
+
+    run_playbook("host1")

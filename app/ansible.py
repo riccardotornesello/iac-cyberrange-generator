@@ -6,6 +6,8 @@ import shutil
 
 import ansible_runner
 
+from app.classes import Host
+
 
 PATH = ".generated/ansible"
 
@@ -33,7 +35,7 @@ def generate_ansible_inventory(vpn_credentials, hosts_credentials):
                 for host in hosts_credentials
             },
             "vars": {
-                "ansible_ssh_common_args": f'-o ProxyCommand="ssh -p 22 -W %h:%p -q {vpn_credentials["username"]}@{vpn_credentials["ip"]} -i ./.generated/keys/id_rsa"',
+                "ansible_ssh_common_args": f'-o ProxyCommand="ssh -p 22 -W %h:%p -q {vpn_credentials["username"]}@{vpn_credentials["ip"]} -i {current_path}/.generated/keys/id_rsa"',
             },
         },
     }
@@ -67,6 +69,30 @@ def generate_vpn_playbook(vpn_subnet):
 
     with open(f"{PATH}/project/vpn.yml", "w") as f:
         yaml.dump(data, f)
+
+
+def generate_host_playbooks(hosts: list[Host]):
+    new_playbooks = []
+
+    for host in hosts:
+        if len(host.services) > 0:
+            new_playbooks.append(host.name)
+
+            data = [
+                {
+                    "name": f"{host.name} host configuration",
+                    "hosts": host.name,
+                    "become": "yes",
+                    "roles": [{"role": service.name} for service in host.services],
+                }
+            ]
+
+            os.makedirs(f"{PATH}/project", exist_ok=True)
+
+            with open(f"{PATH}/project/{host.name}.yml", "w") as f:
+                yaml.dump(data, f)
+
+    return new_playbooks
 
 
 def run_playbook(playbook):

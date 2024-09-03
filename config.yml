@@ -21,6 +21,8 @@ hosts:
     password: "1bH.NP53B&IP"
     ip: 10.0.1.5
     subnet: main
+    services:
+      - name: apache_php_mysql
   - name: host2
     username: testuser2
     password: "1bH.NP53B&IP"
