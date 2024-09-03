@@ -36,7 +36,8 @@ def parse_config(config_file):
             ip=host["ip"],
             subnet=host["subnet"],
             services=[
-                Service(name=service["name"]) for service in host.get("services", [])
+                Service(name=service["name"], vars=service.get("vars", {}))
+                for service in host.get("services", [])
             ],
         )
         for host in yaml_config["hosts"]

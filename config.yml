@@ -28,6 +28,11 @@ hosts:
     password: "1bH.NP53B&IP"
     ip: 10.0.1.6
     subnet: main
+    services:
+      - name: sqlmap
+        vars:
+          sqlmap_url: "http://10.0.1.5"
+      - name: apache_php_mysql
   - name: host3
     username: testuser3
     password: "1bH.NP53B&IP"

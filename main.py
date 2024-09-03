@@ -86,5 +86,3 @@ if __name__ == "__main__":
     # TODO: run playbooks in parallel
     for playbook_name in host_playbook_names:
         run_playbook(playbook_name)
-
-    run_playbook("host1")

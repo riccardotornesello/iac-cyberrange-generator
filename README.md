@@ -2,14 +2,12 @@
 
 ## Description
 
-This project is the Proof of Concept of my Bachelor degree's thesis. It uses Ansible to generate a cyber-range using the Infrastructure as Code paradigm. It will be slowly updated to add new features, use Terraform for the provisioning stage, fix bugs and clean the code.
+This project is the Proof of Concept of my Bachelor degree's thesis. It uses Ansible to generate a cyber-range using the Infrastructure as Code paradigm.
 
 ## Project status
 
 The previous version of the PoC using only Ansible ends at commit [9263cd44c78e1b34315ea65730ee230ab36b983b](https://github.com/riccardotornesello/iac-cyberrange-generator/tree/9263cd44c78e1b34315ea65730ee230ab36b983b).
 However, the project is currently being restructured to give it new life after changes in the tools made it obsolete. This version uses Terraform for provisioning and Ansible for virtual machine configuration.
-
-At the moment the tool works for the provisioning part but the configuration of services is still work in progress and will be finished in the future with sporadic updates.
 
 ## Deployment and compatibility
 

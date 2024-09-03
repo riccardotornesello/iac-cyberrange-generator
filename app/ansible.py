@@ -83,8 +83,10 @@ def generate_host_playbooks(hosts: list[Host]):
                     "name": f"{host.name} host configuration",
                     "hosts": host.name,
                     "become": "yes",
-                    "roles": [{"role": service.name} for service in host.services],
+                    "roles": [{"role": service.name}],
+                    "vars": service.vars,
                 }
+                for service in host.services
             ]
 
             os.makedirs(f"{PATH}/project", exist_ok=True)

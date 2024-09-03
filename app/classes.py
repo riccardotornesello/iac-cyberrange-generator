@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 
@@ -22,6 +22,7 @@ class Subnet:
 @dataclass
 class Service:
     name: str
+    vars: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -31,7 +32,7 @@ class Host:
     password: str
     ip: str
     subnet: str
-    services: List[Service]
+    services: List[Service] = field(default_factory=list)
 
 
 @dataclass

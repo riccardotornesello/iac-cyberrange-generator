@@ -109,7 +109,6 @@ class TerraformAzure:
                     password="soj893f4hIYa!",
                     ip=config.vpn.lan_ip,
                     subnet=config.vpn.subnet,
-                    services=[],
                 ),
                 config.project.name,
                 public=True,
